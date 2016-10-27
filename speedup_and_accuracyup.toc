@@ -1,8 +1,10 @@
 \beamer@endinputifotherversion {3.36pt}
 \beamer@sectionintoc {1}{離散イベントシミュレーション}{4}{0}{1}
+\beamer@subsectionintoc {1}{1}{問題}{4}{0}{1}
+\beamer@subsectionintoc {1}{2}{アルゴリズム}{6}{0}{1}
 \beamer@sectionintoc {2}{並列処理}{8}{0}{2}
 \beamer@subsectionintoc {2}{1}{悲観的な方法}{8}{0}{2}
-\beamer@subsectionintoc {2}{2}{楽観的な方法}{13}{0}{2}
-\beamer@sectionintoc {3}{データ同化}{17}{0}{3}
-\beamer@subsectionintoc {3}{1}{三次元データ同化}{17}{0}{3}
-\beamer@subsectionintoc {3}{2}{四次元データ同化}{17}{0}{3}
+\beamer@subsectionintoc {2}{2}{楽観的な方法}{14}{0}{2}
+\beamer@sectionintoc {3}{データ同化}{18}{0}{3}
+\beamer@subsectionintoc {3}{1}{三次元データ同化}{18}{0}{3}
+\beamer@subsectionintoc {3}{2}{四次元データ同化}{18}{0}{3}

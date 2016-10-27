@@ -1,4 +1,3 @@
-
 % vim:ft=tex: %
 \documentclass[dvipdfmx,uplatex,11pt]{beamer}
 \usepackage{bxdpx-beamer}
@@ -86,7 +85,7 @@
 \end{frame}
 
 \section{離散イベントシミュレーション}
-
+\subsection{問題}
 \begin{frame}{シミュレーションの分類}
   \begin{block}{状態変化の数による分類}
 
@@ -157,6 +156,7 @@
 
 \end{frame}
 
+\subsection{アルゴリズム}
 \begin{frame}{DESに対するアルゴリズム: time-bucket法}
   \begin{block}{time-bucket法(単位時間ごとに計算)}
     単位時間を定義し，単位時間ごとに処理すべきイベントがあるか確認する．
@@ -225,6 +225,20 @@
       \item 待ち行列シミュレーションにおいて，別々のサービスは並列に処理できるのではないか？
     \end{itemize}
   \end{block}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}[htb]
+        \includegraphics[scale=0.5]{machine_para.png}
+      \caption{生産シミュレーションの並列化}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[scale=0.5]{queue_para.png}
+        \caption{待ち行列シミュレーションの並列化}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{基本概念}
@@ -243,61 +257,94 @@
 \end{frame}
 
 
-\begin{frame}{並列処理可能である十分条件}
-  \begin{block}{並列処理可能である十分条件}
+\begin{frame}{並列処理可能}
+  \begin{block}{並列処理可能}
   Q: どんな時に並列に処理しても結果が変わらないか? \\
-  A: イベントを処理する順序が変わらない場合．
-     あるLogicalProcessは
-     今後，送られてきうるメッセージの開始可能時間より小さい時刻では処理してもよい．
+  A: 各ロジカルプロセスのイベントを処理する順序が並列処理しない場合と変わらなければOK.
   \end{block}
 \end{frame}
 
-\begin{frame}{ネットワークベースの方法}
+\begin{frame}{ネットワークモデル}
+  \begin{block}{ネットワークの定義}
+    \begin{description}
+      \item[node] ロジカルプロセス
+      \item[edge] nodeAからnodeBにメッセージを一度でも送る場合nodeAからnodeBに枝をはる．
+      \item[edge's weight] これまでにその枝をを通しておくられたメッセージの最大時刻.
+    \end{description}
+
+  \end{block}
+\end{frame}
+
+\begin{frame}{並列処理可能である十分条件}
+  \begin{block}{アイデア}
+    \begin{itemize}
+      \item 他のロジカルプロセスから送られてくる可能性のあるイベントを処理すべき時刻の最小時刻より，小さければ処理してOK.
+      \item 各ロジカルプロセスからロジカルプロセスへのメッセージ
+            時間が単調増加だと仮定する
+          \item nodeAへ接続している枝の重みが最小の時刻もしくは最小時刻より小さい時刻のイベントは処理してOK
+    \end{itemize}
+
+  \end{block}
 \end{frame}
 
 \begin{frame}{null-message}
   \begin{block}{課題}
-   Queueが空の場合処理できない
-  安全なメッセージのみ処理すればいいのか
+    あまりメッセージを送らない場合edge's weightが更新されず，
+    並列処理の効率が下がる．
   \end{block}
   \begin{block}{解決方法}
-  null-message: 状態を変化させないメッセージ
-  arcの時間をすすめるために，時刻のみのメッセージを追加する
+    null-message(状態を変化させないメッセージ)を送信する．
   \end{block}
 \end{frame}
 
 \subsection{楽観的な方法}
 \begin{frame}{time-warp法の動機}
-  \begin{block}{time-link法の課題}
-  time-link法では，safeである可能性が高いが確実でない場合に，並列処理できない．
-  また，null-messageを多用した場合オーバーヘッドが大きい．
+  \begin{block}{悲観的な方法の課題}
+    \begin{itemize}
+  \item 悲観的な方法では，確実に安全な場合しか並列処理できない
+  \item null-messageを多用した場合, 並列処理率は高まるが，オーバーヘッドが増える
+\end{itemize}
   \end{block}
+
   \begin{block}{time-warp法のアイデア}
-  time-warp法では上記の状況でまず並列に処理し，safeでなかった場合rollbackすることで
-  並列性を高める．
+  time-warp法では安全でなくてもまず並列に処理し，
+  イベントを処理する順序を間違えていたことがわかった際にrollbackする.a
   \end{block}
+
 \end{frame}
 
 \begin{frame}{rollback}
-  あるLPで起きたイベントがsafeでなかった場合，
-  何をロールバックすればよいだろうか？
+  \begin{block}{rollbackするタイミング}
+    届いたメッセージがすでに処理したイベントより前の時刻だったとき．
+  \end{block}
   \begin{block}{イベントの作用}
-  ① LPの状態を変化させる
-  ② 他のLPにメッセージを送信する
+  \begin{itemize}
+    \item LPの状態を変化させる
+    \item 他のLPにメッセージを送信する
+  \end{itemize}
   \end{block}
   \begin{block}{ロールバックの種類}
-　そこで，以下2種類のロールバックが必要となる．
-  ①  restolation:  LPの状態
-  ②  antimessage:  他のLPに
+    \begin{description}
+      \item[restolation] LogicalProcesの状態をロールバック
+      \item[antimessage] 他のLogicalProcesに送ったメッセージをキャンセル
+  \end{description}
   \end{block}
 \end{frame}
 
 \begin{frame}{restolation}
-  a
+  \begin{block}{状態を保存}
+    restolationではLogicalProcessを過去の状態に戻れるようにしておく必要がある．
+    そこで，状態を変化させる際には変化前の状態も保存しておく．
+  \end{block}
 \end{frame}
 
 \begin{frame}{antimessage}
-  a
+  \begin{block}{antimessageの作用分類}
+    \begin{description}
+      \item[メッセージ未処理] メッセージを消去する
+      \item[メッセージ処理済み]メッセージを処理した時間までリストアする
+    \end{description}
+  \end{block}
 \end{frame}
 
 \section{データ同化}

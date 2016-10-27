@@ -1,9 +1,9 @@
-PWD /Users/wada/Documents/work/sim/simapp/static
+PWD /Users/wada/Documents/work/sim
 INPUT /usr/local/texlive/2015/texmf.cnf
 INPUT /usr/local/texlive/2015/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2015/texmf.cnf
 INPUT /usr/local/texlive/2015/texmf-var/web2c/euptex/uplatex.fmt
-INPUT /Users/wada/Documents/work/sim/simapp/static/speedup_and_accuracyup.tex
+INPUT speedup_and_accuracyup.tex
 OUTPUT speedup_and_accuracyup.log
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/beamer/beamer.cls
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/beamer/beamer.cls
@@ -391,6 +391,10 @@ INPUT continuous_sim_time_bucket.png
 INPUT extractbb -O continuous_sim_time_bucket.png
 INPUT event_driven_method.png
 INPUT extractbb -O event_driven_method.png
+INPUT machine_para.png
+INPUT extractbb -O machine_para.png
+INPUT queue_para.png
+INPUT extractbb -O queue_para.png
 INPUT basic_idea.png
 INPUT extractbb -O basic_idea.png
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/beamer/art/beamericonarticle.pdf
